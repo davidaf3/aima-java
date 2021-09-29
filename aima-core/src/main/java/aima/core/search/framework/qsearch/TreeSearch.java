@@ -65,28 +65,41 @@ public class TreeSearch<S, A> extends QueueSearch<S, A> {
 	public Optional<Node<S, A>> findNode(Problem<S, A> problem, Queue<Node<S, A>> frontier) {
 		this.frontier = frontier;
 		clearMetrics();
+		long startTime = System.currentTimeMillis();
+		
 		// initialize the frontier using the initial state of the problem
 		Node<S, A> root = nodeFactory.createNode(problem.getInitialState());
 		addToFrontier(root);
-		if (earlyGoalTest && problem.testSolution(root))
+		if (earlyGoalTest && problem.testSolution(root)) {
+			long endTime = System.currentTimeMillis();
+			updateTimeMetric(endTime - startTime);
 			return asOptional(root);
+		}
 
 		while (!isFrontierEmpty() && !Tasks.currIsCancelled()) {
 			// choose a leaf node and remove it from the frontier
 			Node<S, A> node = removeFromFrontier();
 			System.out.printf("f(\n%s\n) = %.2f\n", node.getState(), evalFn.applyAsDouble(node));
 			// if the node contains a goal state then return the corresponding solution
-			if (!earlyGoalTest && problem.testSolution(node))
+			if (!earlyGoalTest && problem.testSolution(node)) {
+				long endTime = System.currentTimeMillis();
+				updateTimeMetric(endTime - startTime);
 				return asOptional(node);
-
+			}
+			
 			// expand the chosen node and add the successor nodes to the frontier
 			for (Node<S, A> successor : nodeFactory.getSuccessors(node, problem)) {
 				addToFrontier(successor);
-				if (earlyGoalTest && problem.testSolution(successor))
+				if (earlyGoalTest && problem.testSolution(successor)) {
+					long endTime = System.currentTimeMillis();
+					updateTimeMetric(endTime - startTime);
 					return asOptional(successor);
+				}
 			}
 		}
 		// if the frontier is empty then return failure
+		long endTime = System.currentTimeMillis();
+		updateTimeMetric(endTime - startTime);
 		return Optional.empty();
 	}
 
