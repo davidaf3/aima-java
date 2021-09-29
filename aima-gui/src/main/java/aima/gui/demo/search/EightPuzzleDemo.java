@@ -106,7 +106,10 @@ public class EightPuzzleDemo {
 //		eightPuzzleGreedyBestFirstManhattanDemo();
 		
 //		eightPuzzleAStarMisplacedDemo();
-		eightPuzzleAStarManhattanDemo();
+//		eightPuzzleAStarManhattanDemo();
+		
+//		weightedEightPuzzleAStarMisplacedDemo();
+		weightedEightPuzzleAStarManhattanDemo();
 		
 //		eightPuzzleSimulatedAnnealingDemo();
 	}
@@ -186,6 +189,36 @@ public class EightPuzzleDemo {
 			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test);
 			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
 					(new GraphSearch<>(), EightPuzzleFunctions::getManhattanDistance);
+			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
+			printActions(agent.getActions());
+			printInstrumentation(agent.getInstrumentation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void weightedEightPuzzleAStarMisplacedDemo() {
+		System.out.println("\nWeightedEightPuzzleDemo AStar Search (WeightedMisplacedTileHeursitic)");
+		try {
+			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test,
+					EightPuzzleFunctions::weightedStepCostFn);
+			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
+					(new GraphSearch<>(), EightPuzzleFunctions::getWeightedNumberOfMisplacedTiles);
+			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
+			printActions(agent.getActions());
+			printInstrumentation(agent.getInstrumentation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void weightedEightPuzzleAStarManhattanDemo() {
+		System.out.println("\nWeightedEightPuzzleDemo AStar Search (WeightedManhattanHeursitic)");
+		try {
+			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test,
+					EightPuzzleFunctions::weightedStepCostFn);
+			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
+					(new GraphSearch<>(), EightPuzzleFunctions::getWeightedManhattanDistance);
 			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
 			printActions(agent.getActions());
 			printInstrumentation(agent.getInstrumentation());
