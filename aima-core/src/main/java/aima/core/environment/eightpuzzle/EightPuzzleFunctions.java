@@ -64,6 +64,11 @@ public class EightPuzzleFunctions {
 		}
 		return result;
 	}
+	
+	public static double getEpsilonWeightedManhattanDistance(Node<EightPuzzleBoard, Action> node) {
+		double epsilon = 0.5;
+		return (1 + epsilon) * getWeightedManhattanDistance(node);
+	}
 
 	public static int getNumberOfMisplacedTiles(Node<EightPuzzleBoard, Action> node) {
 		EightPuzzleBoard currState = node.getState();

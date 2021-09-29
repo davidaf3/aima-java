@@ -111,7 +111,8 @@ public class EightPuzzleDemo {
 		
 //		weightedEightPuzzleAStarMisplacedDemo();
 //		weightedEightPuzzleAStarManhattanDemo();
-		weightedEightPuzzleAStarNonConsistentDemo();
+//		weightedEightPuzzleAStarNonConsistentDemo();
+		epsilonWeightedEightPuzzleAStarManhattanDemo();
 		
 //		eightPuzzleSimulatedAnnealingDemo();
 	}
@@ -267,6 +268,21 @@ public class EightPuzzleDemo {
 			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
 			printActions(agent.getActions());
 			System.out.println("Final State:\n" + search.getLastState());
+			printInstrumentation(agent.getInstrumentation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void epsilonWeightedEightPuzzleAStarManhattanDemo() {
+		System.out.println("\nWeightedEightPuzzleDemo AStar Search (EpsilonWeightedManhattanHeursitic)");
+		try {
+			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test,
+					EightPuzzleFunctions::weightedStepCostFn);
+			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
+					(new GraphSearch<>(), EightPuzzleFunctions::getEpsilonWeightedManhattanDistance);
+			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
+			printActions(agent.getActions());
 			printInstrumentation(agent.getInstrumentation());
 		} catch (Exception e) {
 			e.printStackTrace();
