@@ -79,8 +79,15 @@ public class GraphSearch<S, A> extends TreeSearch<S, A> {
 	protected void addToFrontier(Node<S, A> node) {
 		if (!reached.containsKey(node.getState()) || 
 				node.getPathCost() < reached.get(node.getState()).getPathCost()) {
+			
+			if (explored.contains(node.getState()))
+				incrementReinsertedMetric();
+			else if (reached.containsKey(node.getState()))
+				incrementDuplicatedMetric();
+			
 			reached.put(node.getState(), node);
 			frontier.add(node);
+			
 			updateMetrics(frontier.size());
 		}
 	}
