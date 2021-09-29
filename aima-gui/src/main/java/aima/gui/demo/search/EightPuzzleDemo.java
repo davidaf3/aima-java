@@ -105,8 +105,8 @@ public class EightPuzzleDemo {
 //		eightPuzzleGreedyBestFirstDemo();
 //		eightPuzzleGreedyBestFirstManhattanDemo();
 		
-		eightPuzzleAStarMisplacedDemo();
-//		eightPuzzleAStarManhattanDemo();
+//		eightPuzzleAStarMisplacedDemo();
+		eightPuzzleAStarManhattanDemo();
 		
 //		eightPuzzleSimulatedAnnealingDemo();
 	}
@@ -179,30 +179,30 @@ public class EightPuzzleDemo {
 			e.printStackTrace();
 		}
 	}
-
-	private static void eightPuzzleSimulatedAnnealingDemo() {
-		System.out.println("\nEightPuzzleDemo Simulated Annealing Search");
+	
+	private static void eightPuzzleAStarManhattanDemo() {
+		System.out.println("\nEightPuzzleDemo AStar Search (ManhattanHeursitic)");
 		try {
 			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test);
-			SimulatedAnnealingSearch<EightPuzzleBoard, Action> search = new SimulatedAnnealingSearch<>
-					(EightPuzzleFunctions::getManhattanDistance);
+			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
+					(new GraphSearch<>(), EightPuzzleFunctions::getManhattanDistance);
 			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
 			printActions(agent.getActions());
-			System.out.println("Final State:\n" + search.getLastState());
 			printInstrumentation(agent.getInstrumentation());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void eightPuzzleAStarManhattanDemo() {
-		System.out.println("\nEightPuzzleDemo AStar Search (ManhattanHeursitic)");
+	private static void eightPuzzleSimulatedAnnealingDemo() {
+		System.out.println("\nEightPuzzleDemo Simulated Annealing Search");
 		try {
 			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(random1);
-			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
-					(new GraphSearch<>(), EightPuzzleFunctions::getManhattanDistance);
+			SimulatedAnnealingSearch<EightPuzzleBoard, Action> search = new SimulatedAnnealingSearch<>
+					(EightPuzzleFunctions::getManhattanDistance);
 			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
 			printActions(agent.getActions());
+			System.out.println("Final State:\n" + search.getLastState());
 			printInstrumentation(agent.getInstrumentation());
 		} catch (Exception e) {
 			e.printStackTrace();
