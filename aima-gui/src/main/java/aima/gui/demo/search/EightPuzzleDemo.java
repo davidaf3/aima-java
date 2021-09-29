@@ -107,9 +107,11 @@ public class EightPuzzleDemo {
 		
 //		eightPuzzleAStarMisplacedDemo();
 //		eightPuzzleAStarManhattanDemo();
+//		eightPuzzleAStarNonConsistentDemo();
 		
 //		weightedEightPuzzleAStarMisplacedDemo();
-		weightedEightPuzzleAStarManhattanDemo();
+//		weightedEightPuzzleAStarManhattanDemo();
+		weightedEightPuzzleAStarNonConsistentDemo();
 		
 //		eightPuzzleSimulatedAnnealingDemo();
 	}
@@ -197,6 +199,20 @@ public class EightPuzzleDemo {
 		}
 	}
 	
+	private static void eightPuzzleAStarNonConsistentDemo() {
+		System.out.println("\nEightPuzzleDemo AStar Search (NonConsistentHeuristic)");
+		try {
+			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test);
+			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
+					(new GraphSearch<>(), EightPuzzleFunctions::getNonConsistentHeuristic);
+			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
+			printActions(agent.getActions());
+			printInstrumentation(agent.getInstrumentation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private static void weightedEightPuzzleAStarMisplacedDemo() {
 		System.out.println("\nWeightedEightPuzzleDemo AStar Search (WeightedMisplacedTileHeursitic)");
 		try {
@@ -219,6 +235,21 @@ public class EightPuzzleDemo {
 					EightPuzzleFunctions::weightedStepCostFn);
 			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
 					(new GraphSearch<>(), EightPuzzleFunctions::getWeightedManhattanDistance);
+			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
+			printActions(agent.getActions());
+			printInstrumentation(agent.getInstrumentation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void weightedEightPuzzleAStarNonConsistentDemo() {
+		System.out.println("\nWeightedEightPuzzleDemo AStar Search (WeightedNonConsistentHeursitic)");
+		try {
+			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test,
+					EightPuzzleFunctions::weightedStepCostFn);
+			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
+					(new GraphSearch<>(), EightPuzzleFunctions::getWeightedNonConsistentHeuristic);
 			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
 			printActions(agent.getActions());
 			printInstrumentation(agent.getInstrumentation());

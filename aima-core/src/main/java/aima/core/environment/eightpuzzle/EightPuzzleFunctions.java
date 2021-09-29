@@ -82,4 +82,30 @@ public class EightPuzzleFunctions {
 				result += (long) Math.pow(2, val);
 		return result;
 	}
+	
+	public static int getNonConsistentHeuristic(Node<EightPuzzleBoard, Action> node) {
+		EightPuzzleBoard currState = node.getState();
+		int result = 0;
+		for (int val = 1; val <= 8; val++) {
+			XYLocation locCurr = currState.getLocationOf(val);
+			XYLocation locGoal = GOAL_STATE.getLocationOf(val);
+			int distance = Math.abs(locGoal.getX() - locCurr.getX()) +
+					Math.abs(locGoal.getY() - locCurr.getY());
+			if (distance == 2) result += distance;
+		}
+		return result;
+	}
+	
+	public static int getWeightedNonConsistentHeuristic(Node<EightPuzzleBoard, Action> node) {
+		EightPuzzleBoard currState = node.getState();
+		int result = 0;
+		for (int val = 1; val <= 8; val++) {
+			XYLocation locCurr = currState.getLocationOf(val);
+			XYLocation locGoal = GOAL_STATE.getLocationOf(val);
+			int distance = Math.abs(locGoal.getX() - locCurr.getX()) +
+					Math.abs(locGoal.getY() - locCurr.getY());
+			if (distance == 2) result += distance * (long) Math.pow(2, val);
+		}
+		return result;
+	}
 }
