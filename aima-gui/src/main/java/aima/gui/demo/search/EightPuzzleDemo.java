@@ -6,9 +6,12 @@ import aima.core.search.agent.SearchAgent;
 import aima.core.search.framework.SearchForActions;
 import aima.core.search.framework.problem.Problem;
 import aima.core.search.framework.qsearch.GraphSearch;
+import aima.core.search.framework.qsearch.TreeSearch;
 import aima.core.search.informed.AStarSearch;
 import aima.core.search.informed.GreedyBestFirstSearch;
 import aima.core.search.local.SimulatedAnnealingSearch;
+import aima.core.search.uninformed.BreadthFirstSearch;
+import aima.core.search.uninformed.DepthFirstSearch;
 import aima.core.search.uninformed.DepthLimitedSearch;
 import aima.core.search.uninformed.IterativeDeepeningSearch;
 
@@ -99,7 +102,7 @@ public class EightPuzzleDemo {
 //			new EightPuzzleBoard(new int[] { 0, 8, 7, 6, 5, 4, 3, 2, 1 });
 
 	public static void main(String[] args) {
-		System.out.println("Initial State:\n" + boardWithThreeMoveSolution);
+		System.out.println("Initial State:\n" + test);
 //		eightPuzzleDLSDemo();
 //		eightPuzzleIDLSDemo();
 //		eightPuzzleGreedyBestFirstDemo();
@@ -112,7 +115,10 @@ public class EightPuzzleDemo {
 //		weightedEightPuzzleAStarMisplacedDemo();
 //		weightedEightPuzzleAStarManhattanDemo();
 //		weightedEightPuzzleAStarNonConsistentDemo();
-		epsilonWeightedEightPuzzleAStarManhattanDemo();
+//		epsilonWeightedEightPuzzleAStarManhattanDemo();
+		
+//		eightPuzzleBreadthFirstDemo();
+		eightPuzzleDepthFirstDemo();
 		
 //		eightPuzzleSimulatedAnnealingDemo();
 	}
@@ -251,6 +257,34 @@ public class EightPuzzleDemo {
 					EightPuzzleFunctions::weightedStepCostFn);
 			SearchForActions<EightPuzzleBoard, Action> search = new AStarSearch<>
 					(new GraphSearch<>(), EightPuzzleFunctions::getWeightedNonConsistentHeuristic);
+			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
+			printActions(agent.getActions());
+			printInstrumentation(agent.getInstrumentation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void eightPuzzleBreadthFirstDemo() {
+		System.out.println("\nEightPuzzleDemo Breadth First Search");
+		try {
+			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test,
+					EightPuzzleFunctions::weightedStepCostFn);
+			SearchForActions<EightPuzzleBoard, Action> search = new BreadthFirstSearch<>();
+			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
+			printActions(agent.getActions());
+			printInstrumentation(agent.getInstrumentation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void eightPuzzleDepthFirstDemo() {
+		System.out.println("\nEightPuzzleDemo Depth First Search");
+		try {
+			Problem<EightPuzzleBoard, Action> problem = new BidirectionalEightPuzzleProblem(test,
+					EightPuzzleFunctions::weightedStepCostFn);
+			SearchForActions<EightPuzzleBoard, Action> search = new DepthFirstSearch<>(new GraphSearch<>());
 			SearchAgent<Object, EightPuzzleBoard, Action> agent = new SearchAgent<>(problem, search);
 			printActions(agent.getActions());
 			printInstrumentation(agent.getInstrumentation());
