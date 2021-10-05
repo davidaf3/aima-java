@@ -39,10 +39,18 @@ public class NQueensDemo {
 //		solveNQueensWithDepthFirstSearch();
 //		solveNQueensWithBreadthFirstSearch();
 		
-		solveNQueensWithAStarSearchIncrementalH0();
+//		solveNQueensWithAStarSearchIncrementalH0();
 //		solveNQueensWithAStarSearchComplete1H0();
 //		solveNQueensWithAStarSearchComplete2H0();
 //		solveNQueensWithAStarSearchComplete3H0();
+		
+//		solveNQueensWithAStarSearchComplete1AttackingPairs();
+//		solveNQueensWithAStarSearchComplete2AttackingPairs();
+//		solveNQueensWithAStarSearchComplete3AttackingPairs();
+		
+//		solveNQueensWithAStarSearchComplete1AttackedQueens();
+//		solveNQueensWithAStarSearchComplete2AttackedQueens();
+//		solveNQueensWithAStarSearchComplete3AttackedQueens();
 		
 //		solveNQueensWithAStarSearch4e();
 //		solveNQueensWithRecursiveDLS();
@@ -125,6 +133,32 @@ public class NQueensDemo {
 		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
 		System.out.println(search.getMetrics());
 	}
+	
+	private static void solveNQueensWithAStarSearchComplete1AttackingPairs() {
+		System.out.println("\n--- NQueensDemo A* (complete-1 state formulation, graph search 3e) ---");
+
+		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
+				(boardSize, Config.QUEENS_IN_FIRST_ROW);
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
+				(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackingPairs);
+		Optional<List<QueenAction>> actions = search.findActions(problem);
+
+		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
+		System.out.println(search.getMetrics());
+	}
+	
+	private static void solveNQueensWithAStarSearchComplete2AttackingPairs() {
+		System.out.println("\n--- NQueensDemo A* (complete-2 state formulation, graph search 3e) ---");
+
+		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
+				(boardSize, Config.QUEEN_IN_EVERY_COL);
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
+				(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackingPairs);
+		Optional<List<QueenAction>> actions = search.findActions(problem);
+
+		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
+		System.out.println(search.getMetrics());
+	}
 
 	private static void solveNQueensWithAStarSearchComplete3AttackingPairs() {
 		System.out.println("\n--- NQueensDemo A* (complete-3 state formulation, graph search 3e) ---");
@@ -133,6 +167,45 @@ public class NQueensDemo {
 				(boardSize, Config.QUEEN_IN_EVERY_COL_ROW);
 		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
 				(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackingPairs);
+		Optional<List<QueenAction>> actions = search.findActions(problem);
+
+		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
+		System.out.println(search.getMetrics());
+	}
+	
+	private static void solveNQueensWithAStarSearchComplete1AttackedQueens() {
+		System.out.println("\n--- NQueensDemo A* (complete-1 state formulation, graph search 3e) ---");
+
+		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
+				(boardSize, Config.QUEENS_IN_FIRST_ROW);
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
+				(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackedQueens);
+		Optional<List<QueenAction>> actions = search.findActions(problem);
+
+		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
+		System.out.println(search.getMetrics());
+	}
+	
+	private static void solveNQueensWithAStarSearchComplete2AttackedQueens() {
+		System.out.println("\n--- NQueensDemo A* (complete-2 state formulation, graph search 3e) ---");
+
+		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
+				(boardSize, Config.QUEEN_IN_EVERY_COL);
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
+				(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackedQueens);
+		Optional<List<QueenAction>> actions = search.findActions(problem);
+
+		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
+		System.out.println(search.getMetrics());
+	}
+
+	private static void solveNQueensWithAStarSearchComplete3AttackedQueens() {
+		System.out.println("\n--- NQueensDemo A* (complete-3 state formulation, graph search 3e) ---");
+
+		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
+				(boardSize, Config.QUEEN_IN_EVERY_COL_ROW);
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
+				(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackedQueens);
 		Optional<List<QueenAction>> actions = search.findActions(problem);
 
 		actions.ifPresent(qActions -> qActions.forEach(System.out::println));

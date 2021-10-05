@@ -149,6 +149,29 @@ public class NQueensBoard {
 	public int getNumberOfAttackingPairs() {
 		return getQueenPositions().stream().mapToInt(this::getNumberOfAttacksOn).sum() / 2;
 	}
+	
+	public int getNumberOfAttackedQueens() {
+		return getQueenPositions().stream().
+				mapToInt(queen -> getNumberOfAttacksOn(queen) > 0 ? 1 : 0).sum();
+	}
+	
+	public int getMaximumNumberOfQueensAligned() {
+		int maxAligned = 0;
+		List<XYLocation> queens = getQueenPositions();
+		for (XYLocation queen : queens) {
+			int alignedInRow = 1;
+			int alignedInColumn = 1;
+			for (XYLocation otherQueen : queens) {
+				if (!otherQueen.equals(queen)) {
+					if (otherQueen.getX() == queen.getX())
+						alignedInRow++;
+					else if (otherQueen.getY() == queen.getY())
+						alignedInColumn++;
+				}
+			}
+		}
+		return maxAligned;
+	}
 
 	public int getNumberOfAttacksOn(XYLocation l) {
 		int x = l.getX();
