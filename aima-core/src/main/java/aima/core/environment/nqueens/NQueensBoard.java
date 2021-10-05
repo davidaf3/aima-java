@@ -1,8 +1,13 @@
 package aima.core.environment.nqueens;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import aima.core.util.datastructure.XYLocation;
 
@@ -17,7 +22,7 @@ public class NQueensBoard {
 
 	/** Parameters for initialization. */
 	public enum Config {
-		EMPTY, QUEENS_IN_FIRST_ROW, QUEEN_IN_EVERY_COL
+		EMPTY, QUEENS_IN_FIRST_ROW, QUEEN_IN_EVERY_COL,  QUEEN_IN_EVERY_COL_ROW
 	}
 
 	/**
@@ -57,6 +62,12 @@ public class NQueensBoard {
 			Random r = new Random();
 			for (int col = 0; col < size; col++)
 				addQueenAt(new XYLocation(col, r.nextInt(size)));
+		} else if (config == Config.QUEEN_IN_EVERY_COL_ROW) {
+			List<Integer> rows = IntStream.range(0, size).boxed().collect(Collectors.toList());
+			Collections.shuffle(rows);
+			for (int col = 0; col < size; col++) {
+				addQueenAt(new XYLocation(col, rows.get(col)));
+			}
 		}
 	}
 

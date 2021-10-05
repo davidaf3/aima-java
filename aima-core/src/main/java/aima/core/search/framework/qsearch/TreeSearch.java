@@ -80,7 +80,7 @@ public class TreeSearch<S, A> extends QueueSearch<S, A> {
 			// choose a leaf node and remove it from the frontier
 			Node<S, A> node = removeFromFrontier();
 			if (evalFn != null)
-				System.out.printf("f(\n%s\n) = %.2f\n", node.getState(), evalFn.applyAsDouble(node));
+				System.out.printf("f() = %.2f\n", evalFn.applyAsDouble(node));
 			// if the node contains a goal state then return the corresponding solution
 			if (!earlyGoalTest && problem.testSolution(node)) {
 				long endTime = System.currentTimeMillis();
