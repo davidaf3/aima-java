@@ -155,19 +155,44 @@ public class NQueensBoard {
 				mapToInt(queen -> getNumberOfAttacksOn(queen) > 0 ? 1 : 0).sum();
 	}
 	
-	public int getMaximumNumberOfQueensAligned() {
-		int maxAligned = 0;
+	public long getMaximumNumberOfQueensAligned() {
+		long maxAligned = 0;
 		List<XYLocation> queens = getQueenPositions();
+		Set<Integer> visitedRows = new HashSet<>();
+		Set<Integer> visitedColumns = new HashSet<>();
+		Set<Integer> visitedDownDiagonals = new HashSet<>();
+		Set<Integer> visitedUpDiagonals = new HashSet<>();
+		
 		for (XYLocation queen : queens) {
-			int alignedInRow = 1;
-			int alignedInColumn = 1;
-			for (XYLocation otherQueen : queens) {
-				if (!otherQueen.equals(queen)) {
-					if (otherQueen.getX() == queen.getX())
-						alignedInRow++;
-					else if (otherQueen.getY() == queen.getY())
-						alignedInColumn++;
-				}
+			if (!visitedRows.contains(queen.getX())) {
+				visitedRows.add(queen.getX());
+				long alignedInRow = queens.stream().
+						filter(otherQueen -> otherQueen.getX() == queen.getX()).count();
+				if (alignedInRow > maxAligned)
+					maxAligned = alignedInRow;
+			}
+			if (!visitedColumns.contains(queen.getY())) {
+				visitedColumns.add(queen.getY());
+				long alignedInColumn = queens.stream().
+						filter(otherQueen -> otherQueen.getY() == queen.getY()).count();
+				if (alignedInColumn > maxAligned)
+					maxAligned = alignedInColumn;
+			}
+			int downDiagonal = queen.getX() - queen.getY();
+			if (!visitedDownDiagonals.contains(downDiagonal)) {
+				visitedDownDiagonals.add(downDiagonal);
+				long alignedInDownDiagonal = queens.stream().
+						filter(otherQueen -> otherQueen.getX() - otherQueen.getY() == downDiagonal).count();
+				if (alignedInDownDiagonal > maxAligned)
+					maxAligned = alignedInDownDiagonal;
+			}
+			int upDiagonal = queen.getX() + queen.getY();
+			if (!visitedUpDiagonals.contains(upDiagonal)) {
+				visitedDownDiagonals.add(upDiagonal);
+				long alignedInUpDiagonal = queens.stream().
+						filter(otherQueen -> otherQueen.getX() + otherQueen.getY() == upDiagonal).count();
+				if (alignedInUpDiagonal > maxAligned)
+					maxAligned = alignedInUpDiagonal;
 			}
 		}
 		return maxAligned;
