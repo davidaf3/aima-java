@@ -53,8 +53,10 @@ public class NQueensDemo {
 //		solveNQueensWithAStarSearchComplete3AttackedQueens();
 		
 //		solveNQueensWithAStarSearchComplete1Aligned();
-//		solveNQueensWithAStarSearchComplete2Aligned();
+		solveNQueensWithAStarSearchComplete2Aligned();
 //		solveNQueensWithAStarSearchComplete3Aligned();
+		
+//		solveNQueensWithAStarSearchIncrementalProbabilistic();
 		
 //		solveNQueensWithAStarSearch4e();
 //		solveNQueensWithRecursiveDLS();
@@ -249,6 +251,18 @@ public class NQueensDemo {
 				(boardSize, Config.QUEEN_IN_EVERY_COL_ROW);
 		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
 				(new GraphSearch<>(), NQueensFunctions::getMaximumNumberOfQueensAlignedMinusOne);
+		Optional<List<QueenAction>> actions = search.findActions(problem);
+
+		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
+		System.out.println(search.getMetrics());
+	}
+	
+	private static void solveNQueensWithAStarSearchIncrementalProbabilistic() {
+		System.out.println("\n--- NQueensDemo A* (incremental state formulation, graph search 3e) ---");
+
+		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createIncrementalFormulationProblem(boardSize);
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
+				(new TreeSearch<>(), NQueensFunctions::getHeuristicProbabilisticEstimationOfSolution);
 		Optional<List<QueenAction>> actions = search.findActions(problem);
 
 		actions.ifPresent(qActions -> qActions.forEach(System.out::println));

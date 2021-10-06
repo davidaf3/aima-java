@@ -152,18 +152,20 @@ public class NQueensBoard {
 	
 	public int getNumberOfAttackedQueens() {
 		return getQueenPositions().stream().
-				mapToInt(queen -> getNumberOfAttacksOn(queen) > 0 ? 1 : 0).sum();
+				mapToInt(queen -> isSquareUnderAttack(queen)? 1 : 0).sum();
 	}
 	
 	public long getMaximumNumberOfQueensAligned() {
 		long maxAligned = 0;
 		List<XYLocation> queens = getQueenPositions();
+		
 		Set<Integer> visitedRows = new HashSet<>();
 		Set<Integer> visitedColumns = new HashSet<>();
 		Set<Integer> visitedDownDiagonals = new HashSet<>();
 		Set<Integer> visitedUpDiagonals = new HashSet<>();
 		
 		for (XYLocation queen : queens) {
+			
 			if (!visitedRows.contains(queen.getX())) {
 				visitedRows.add(queen.getX());
 				long alignedInRow = queens.stream().
@@ -171,6 +173,7 @@ public class NQueensBoard {
 				if (alignedInRow > maxAligned)
 					maxAligned = alignedInRow;
 			}
+			
 			if (!visitedColumns.contains(queen.getY())) {
 				visitedColumns.add(queen.getY());
 				long alignedInColumn = queens.stream().
@@ -178,6 +181,7 @@ public class NQueensBoard {
 				if (alignedInColumn > maxAligned)
 					maxAligned = alignedInColumn;
 			}
+			
 			int downDiagonal = queen.getX() - queen.getY();
 			if (!visitedDownDiagonals.contains(downDiagonal)) {
 				visitedDownDiagonals.add(downDiagonal);
@@ -186,6 +190,7 @@ public class NQueensBoard {
 				if (alignedInDownDiagonal > maxAligned)
 					maxAligned = alignedInDownDiagonal;
 			}
+			
 			int upDiagonal = queen.getX() + queen.getY();
 			if (!visitedUpDiagonals.contains(upDiagonal)) {
 				visitedDownDiagonals.add(upDiagonal);
@@ -198,6 +203,30 @@ public class NQueensBoard {
 		return maxAligned;
 	}
 
+	public double getProbabilityOfSolution() {
+		List<XYLocation> queens = getQueenPositions();
+		int firtsAvailableRow = queens.size();
+		int availableSquares = (squares.length - firtsAvailableRow) * squares.length;
+		
+		Set<Integer> attackedColumns = queens.stream().map(XYLocation::getY).collect(Collectors.toSet());
+		Set<Integer> attackedUpDiagonals = 
+				queens.stream().map(queen -> queen.getX() + queen.getY()).collect(Collectors.toSet());
+		Set<Integer> attackedDownDiagonals = 
+				queens.stream().map(queen -> queen.getX() - queen.getY()).collect(Collectors.toSet());
+		
+		int safeSquares = 0;
+		for (int y = 0; y < squares.length; y++) {
+			if (!attackedColumns.contains(y)) {
+				for (int x = firtsAvailableRow; x < squares.length; x++) {
+					if (!attackedUpDiagonals.contains(x + y) && !attackedDownDiagonals.contains(x - y))
+						safeSquares++;
+				}
+			}
+		}
+		
+		return availableSquares > 0 ? (double) safeSquares / availableSquares : 0;
+	}
+	
 	public int getNumberOfAttacksOn(XYLocation l) {
 		int x = l.getX();
 		int y = l.getY();

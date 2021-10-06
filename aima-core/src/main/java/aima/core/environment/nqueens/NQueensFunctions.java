@@ -108,5 +108,16 @@ public class NQueensFunctions {
     public static double getMaximumNumberOfQueensAlignedMinusOne(Node<NQueensBoard, QueenAction> node) {
     	 return node.getState().getMaximumNumberOfQueensAligned() - 1;
     }
+    
+    public static double getHeuristicProbabilisticEstimationOfSolution(Node<NQueensBoard, QueenAction> node) {
+    	NQueensBoard state = node.getState();
+    	int queens = state.getNumberOfQueensOnBoard();
+    	
+    	if (queens ==  state.getSize())
+    		return 0;
+    	
+    	double probability = state.getProbabilityOfSolution();
+    	return probability > 0 ? (state.getSize() - queens) / probability : Integer.MAX_VALUE;
+    }
 
 }

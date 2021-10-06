@@ -41,7 +41,7 @@ public class AStarSearch<S, A> extends BestFirstSearch<S, A> {
         return new EvaluationFunction<S, A>(h) {
             @Override
             public double applyAsDouble(Node<S, A> node) {
-                return node.getPathCost() + this.h.applyAsDouble(node);
+            	return node.getPathCost() + this.h.applyAsDouble(node);
             }
         };
     }
