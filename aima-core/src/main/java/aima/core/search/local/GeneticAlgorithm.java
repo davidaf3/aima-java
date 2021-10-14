@@ -146,7 +146,7 @@ public class GeneticAlgorithm<A> {
 			
 			averageFitness = population.stream().
 					collect(Collectors.averagingDouble(individual -> fitnessFn.apply(individual))).doubleValue();
-			System.out.println("Generation: " + itCount);
+			System.out.println("Generation: " + itCount + 1);
 			System.out.println("\tAverage fitness: " + averageFitness);
 			System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
 
@@ -299,15 +299,22 @@ public class GeneticAlgorithm<A> {
 	// function REPRODUCE(x, y) returns an individual
 	// inputs: x, y, parent individuals
 	protected Individual<A> reproduce(Individual<A> x, Individual<A> y) {
-		// n <- LENGTH(x);
-		// Note: this is = this.individualLength
-		// c <- random number from 1 to n
-		int c = randomOffset(individualLength);
-		// return APPEND(SUBSTRING(x, 1, c), SUBSTRING(y, c+1, n))
+		int offset1 = randomOffset(individualLength);
+		int offset2 = randomOffset(individualLength);
+		if (offset2 < offset1) {
+			int aux = offset1;
+			offset1 = offset2;
+			offset2 = aux;
+		}
+		
 		List<A> childRepresentation = new ArrayList<A>();
-		childRepresentation.addAll(x.getRepresentation().subList(0, c));
-		childRepresentation.addAll(y.getRepresentation().subList(c, individualLength));
-
+		List<A> elementsFromX = x.getRepresentation().subList(offset1, offset2 + 1);
+		List<A> elementsFromY = y.getRepresentation().stream().
+				filter(e -> !elementsFromX.contains(e)).collect(Collectors.toList());
+		
+		childRepresentation.addAll(elementsFromY.subList(0, offset1));
+		childRepresentation.addAll(elementsFromX);
+		childRepresentation.addAll(elementsFromY.subList(offset1, elementsFromY.size()));
 		return new Individual<A>(childRepresentation);
 	}
 
