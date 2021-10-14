@@ -2,6 +2,7 @@ package aima.core.environment.nqueens;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
@@ -35,8 +36,9 @@ public class NQueensGenAlgoUtil {
 	public static Individual<Integer> generateRandomIndividual(int boardSize) {
 		List<Integer> individualRepresentation = new ArrayList<>();
 		for (int i = 0; i < boardSize; i++) {
-			individualRepresentation.add(new Random().nextInt(boardSize));
+			individualRepresentation.add(i);
 		}
+		Collections.shuffle(individualRepresentation);
 		return new Individual<>(individualRepresentation);
 	}
 
