@@ -148,7 +148,7 @@ public class GeneticAlgorithm<A> {
 			
 			averageFitness = population.stream().
 					collect(Collectors.averagingDouble(individual -> fitnessFn.apply(individual))).doubleValue();
-			System.out.println("Generation: " + itCount + 1);
+			System.out.printf("Generation %d:\n", itCount + 1);
 			System.out.println("\tAverage fitness: " + averageFitness);
 			System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
 
@@ -312,32 +312,34 @@ public class GeneticAlgorithm<A> {
 	// inputs: x, y, parent individuals
 	protected Individual<A> reproduce(Individual<A> x, Individual<A> y) {
 		int offset1 = randomOffset(individualLength);
-		int offset2 = randomOffset(individualLength);
-		if (offset2 < offset1) {
-			int aux = offset1;
-			offset1 = offset2;
-			offset2 = aux;
-		}
+		int offset2 = offset1 + random.nextInt(individualLength - offset1);
 		
 		List<A> childRepresentation = new ArrayList<A>();
-		List<A> elementsFromX = x.getRepresentation().subList(offset1, offset2 + 1);
+		List<A> elementsFromX = x.getRepresentation().subList(offset1, offset2);
 		List<A> elementsFromY = y.getRepresentation().stream().
 				filter(e -> !elementsFromX.contains(e)).collect(Collectors.toList());
 		
-		childRepresentation.addAll(elementsFromY.subList(0, offset1));
-		childRepresentation.addAll(elementsFromX);
 		childRepresentation.addAll(elementsFromY.subList(offset1, elementsFromY.size()));
+		childRepresentation.addAll(elementsFromX);
+		childRepresentation.addAll(elementsFromY.subList(0, offset1));
+		
+		for (A a : childRepresentation) {
+			if (childRepresentation.stream().filter(a::equals).count() > 1) {
+				System.out.println("asfds");
+			}
+		}
+		
 		return new Individual<A>(childRepresentation);
 	}
 
 	protected Individual<A> mutate(Individual<A> child) {
-		int mutateOffset = randomOffset(individualLength);
-		int alphaOffset = randomOffset(finiteAlphabet.size());
+		int mutateOffset1 = randomOffset(individualLength);
+		int mutateOffset2 = randomOffset(individualLength);
 
 		List<A> mutatedRepresentation = new ArrayList<A>(child.getRepresentation());
-
-		mutatedRepresentation.set(mutateOffset, finiteAlphabet.get(alphaOffset));
-
+		mutatedRepresentation.set(mutateOffset1, child.getRepresentation().get(mutateOffset2));
+		mutatedRepresentation.set(mutateOffset2, child.getRepresentation().get(mutateOffset1));
+		
 		return new Individual<A>(mutatedRepresentation);
 }
 

@@ -350,7 +350,7 @@ public class NQueensDemo {
 			population.add(NQueensGenAlgoUtil.generateRandomIndividual(boardSize));
 
 		GeneticAlgorithm<Integer> ga = new GeneticAlgorithm<>(boardSize,
-				NQueensGenAlgoUtil.getFiniteAlphabetForBoardOfSize(boardSize), mutationProbability);
+				NQueensGenAlgoUtil.getFiniteAlphabetForBoardOfSize(boardSize), mutationProbability, crossoverProbability);
 
 		Individual<Integer> bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, numberOfGenerations);
 		System.out.println("100 generations, Best Individual:\n"
