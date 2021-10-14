@@ -32,6 +32,7 @@ public class NQueensDemo {
 	private static final int popSize = 50;
 	private static final double mutationProbability = 0.15;
 	private static final int numberOfGenerations = 100;
+	private static final double crossoverProbability = 0.8;
 	
 	private static final int boardSize = 8;
 
