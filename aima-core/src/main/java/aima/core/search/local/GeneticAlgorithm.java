@@ -278,9 +278,18 @@ public class GeneticAlgorithm<A> {
 
 		// Determine all of the fitness values
 		double[] fValues = new double[population.size()];
+		double worstFitness = Integer.MAX_VALUE;
 		for (int i = 0; i < population.size(); i++) {
-			fValues[i] = fitnessFn.apply(population.get(i));
+			double fitness = fitnessFn.apply(population.get(i));
+			fValues[i] = fitness;
+			if (fitness < worstFitness) worstFitness = fitness;
 		}
+		
+		// Fitness scaling
+		for (int i = 0; i < population.size(); i++) {
+			fValues[i] -= worstFitness;
+		}
+		
 		// Normalize the fitness values
 		fValues = Util.normalize(fValues);
 		double prob = random.nextDouble();
