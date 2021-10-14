@@ -143,7 +143,7 @@ public class GeneticAlgorithm<A> {
 		// repeat
 		int itCount = 0;
 		do {
-			population = nextGeneration(population, fitnessFn);
+			population = nextGeneration(population, fitnessFn, bestIndividual);
 			bestIndividual = retrieveBestIndividual(population, fitnessFn);
 			
 			averageFitness = population.stream().
@@ -247,11 +247,11 @@ public class GeneticAlgorithm<A> {
 	 * Primitive operation which is responsible for creating the next
 	 * generation. Override to get progress information!
 	 */
-	protected List<Individual<A>> nextGeneration(List<Individual<A>> population, FitnessFunction<A> fitnessFn) {
+	protected List<Individual<A>> nextGeneration(List<Individual<A>> population, FitnessFunction<A> fitnessFn, Individual<A> previousBest) {
 		// new_population <- empty set
 		List<Individual<A>> newPopulation = new ArrayList<>(population.size());
 		// for i = 1 to SIZE(population) do
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < population.size() - 1; i++) {
 			// x <- RANDOM-SELECTION(population, FITNESS-FN)
 			Individual<A> x = randomSelection(population, fitnessFn);
 			// y <- RANDOM-SELECTION(population, FITNESS-FN)
@@ -265,6 +265,7 @@ public class GeneticAlgorithm<A> {
 			// add child to new_population
 			newPopulation.add(child);
 		}
+		newPopulation.add(previousBest);
 		notifyProgressTrackers(getIterations(), population);
 		return newPopulation;
 	}
