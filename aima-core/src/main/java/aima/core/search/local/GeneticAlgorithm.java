@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Artificial Intelligence A Modern Approach (3rd Edition): Figure 4.8, page
@@ -123,6 +124,14 @@ public class GeneticAlgorithm<A> {
 
 		// Create a local copy of the population to work with
 		List<Individual<A>> population = new ArrayList<>(initPopulation);
+		bestIndividual = retrieveBestIndividual(population, fitnessFn);
+		
+		double averageFitness = population.stream().
+				collect(Collectors.averagingDouble(individual -> fitnessFn.apply(individual))).doubleValue();
+		System.out.println("Generation 0:");
+		System.out.println("\tAverage fitness: " + averageFitness);
+		System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
+		
 		// Validate the population and setup the instrumentation
 		validatePopulation(population);
 		updateMetrics(population, 0, 0L);
@@ -134,6 +143,12 @@ public class GeneticAlgorithm<A> {
 		do {
 			population = nextGeneration(population, fitnessFn);
 			bestIndividual = retrieveBestIndividual(population, fitnessFn);
+			
+			averageFitness = population.stream().
+					collect(Collectors.averagingDouble(individual -> fitnessFn.apply(individual))).doubleValue();
+			System.out.println("Generation: " + itCount);
+			System.out.println("\tAverage fitness: " + averageFitness);
+			System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
 
 			updateMetrics(population, ++itCount, System.currentTimeMillis() - startTime);
 
