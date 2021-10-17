@@ -143,7 +143,7 @@ public class GeneticAlgorithm<A> {
 		// repeat
 		int itCount = 0;
 		do {
-			population = nextGeneration(population, fitnessFn, bestIndividual);
+			population = nextGeneration(population, fitnessFn);
 			bestIndividual = retrieveBestIndividual(population, fitnessFn);
 			
 			averageFitness = population.stream().
@@ -247,17 +247,23 @@ public class GeneticAlgorithm<A> {
 	 * Primitive operation which is responsible for creating the next
 	 * generation. Override to get progress information!
 	 */
-	protected List<Individual<A>> nextGeneration(List<Individual<A>> population, FitnessFunction<A> fitnessFn, Individual<A> previousBest) {
+	protected List<Individual<A>> nextGeneration(List<Individual<A>> population, FitnessFunction<A> fitnessFn) {
 		// new_population <- empty set
 		List<Individual<A>> newPopulation = new ArrayList<>(population.size());
 		// for i = 1 to SIZE(population) do
-		for (int i = 0; i < population.size() - 1; i++) {
+		for (int i = 0; i < population.size(); i++) {
 			// x <- RANDOM-SELECTION(population, FITNESS-FN)
 			Individual<A> x = randomSelection(population, fitnessFn);
+			double xFitness = fitnessFn.apply(x);
 			// y <- RANDOM-SELECTION(population, FITNESS-FN)
 			Individual<A> y = randomSelection(population, fitnessFn);
+			double yFitness = fitnessFn.apply(y);
 			// child <- REPRODUCE(x, y)
 			Individual<A> child = random.nextDouble() <= crossoverProbability ? reproduce(x, y) : x;
+			Individual<A> bestParent = xFitness >= yFitness ? x : y;
+			double bestParentFitness = xFitness >= yFitness ? xFitness : yFitness;
+			if (bestParentFitness > fitnessFn.apply(child))
+				child = bestParent;
 			// if (small random probability) then child <- MUTATE(child)
 			if (random.nextDouble() <= mutationProbability) {
 				child = mutate(child);
@@ -265,7 +271,6 @@ public class GeneticAlgorithm<A> {
 			// add child to new_population
 			newPopulation.add(child);
 		}
-		newPopulation.add(previousBest);
 		notifyProgressTrackers(getIterations(), population);
 		return newPopulation;
 	}
