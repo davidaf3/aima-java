@@ -28,6 +28,10 @@ public class NQueensGenAlgoUtil {
 		return new NQueensFitnessFunction();
 	}
 	
+	public static FitnessFunction<Integer> getFitnessFunctionNotAttacked() {
+		return new NQueensFitnessFunctionNotAttacked();
+	}
+	
 	public static Predicate<Individual<Integer>> getGoalTest() {
 		return new NQueensGenAlgoGoalTest();
 	}
@@ -95,6 +99,14 @@ public class NQueensGenAlgoUtil {
 			}
 
 			return fitness;
+		}
+	}
+	
+	public static class NQueensFitnessFunctionNotAttacked implements FitnessFunction<Integer> {
+
+		public double apply(Individual<Integer> individual) {
+			NQueensBoard board = getBoardForIndividual(individual);
+			return board.getSize() - board.getNumberOfAttackedQueens();
 		}
 	}
 
