@@ -193,7 +193,7 @@ public class NQueensBoard {
 			
 			int upDiagonal = queen.getX() + queen.getY();
 			if (!visitedUpDiagonals.contains(upDiagonal)) {
-				visitedDownDiagonals.add(upDiagonal);
+				visitedUpDiagonals.add(upDiagonal);
 				long alignedInUpDiagonal = queens.stream().
 						filter(otherQueen -> otherQueen.getX() + otherQueen.getY() == upDiagonal).count();
 				if (alignedInUpDiagonal > maxAligned)

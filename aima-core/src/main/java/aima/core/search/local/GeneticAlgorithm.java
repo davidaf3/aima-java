@@ -57,6 +57,7 @@ public class GeneticAlgorithm<A> {
 	protected static final String POPULATION_SIZE = "populationSize";
 	protected static final String ITERATIONS = "iterations";
 	protected static final String TIME_IN_MILLISECONDS = "timeInMSec";
+	protected static final String AVERAGE_FITNESS = "avgFitness";
 	//
 	protected Metrics metrics = new Metrics();
 	//
@@ -130,9 +131,11 @@ public class GeneticAlgorithm<A> {
 		
 		double averageFitness = population.stream().
 				collect(Collectors.averagingDouble(individual -> fitnessFn.apply(individual))).doubleValue();
-		System.out.println("Generation 0:");
-		System.out.println("\tAverage fitness: " + averageFitness);
-		System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
+//		metrics.set(AVERAGE_FITNESS, averageFitness);
+//		System.out.println("Generation 0:");
+//		System.out.println("\tAverage fitness: " + averageFitness);
+//		System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
+		System.out.print(averageFitness + ";");
 		
 		// Validate the population and setup the instrumentation
 		validatePopulation(population);
@@ -148,9 +151,11 @@ public class GeneticAlgorithm<A> {
 			
 			averageFitness = population.stream().
 					collect(Collectors.averagingDouble(individual -> fitnessFn.apply(individual))).doubleValue();
-			System.out.printf("Generation %d:\n", itCount + 1);
-			System.out.println("\tAverage fitness: " + averageFitness);
-			System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
+//			metrics.set(AVERAGE_FITNESS, averageFitness);
+//			System.out.printf("Generation %d:\n", itCount + 1);
+//			System.out.println("\tAverage fitness: " + averageFitness);
+//			System.out.println("\tBest fitness: " + fitnessFn.apply(bestIndividual));
+			System.out.print(averageFitness + ";");
 
 			updateMetrics(population, ++itCount, System.currentTimeMillis() - startTime);
 
@@ -324,9 +329,9 @@ public class GeneticAlgorithm<A> {
 		List<A> elementsFromY = y.getRepresentation().stream().
 				filter(e -> !elementsFromX.contains(e)).collect(Collectors.toList());
 		
-		childRepresentation.addAll(elementsFromY.subList(offset1, elementsFromY.size()));
+		childRepresentation.addAll(elementsFromY.subList(elementsFromY.size() - offset1, elementsFromY.size()));
 		childRepresentation.addAll(elementsFromX);
-		childRepresentation.addAll(elementsFromY.subList(0, offset1));
+		childRepresentation.addAll(elementsFromY.subList(0, elementsFromY.size() - offset1));
 		
 		for (A a : childRepresentation) {
 			if (childRepresentation.stream().filter(a::equals).count() > 1) {

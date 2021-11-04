@@ -105,8 +105,22 @@ public class NQueensGenAlgoUtil {
 	public static class NQueensFitnessFunctionNotAttacked implements FitnessFunction<Integer> {
 
 		public double apply(Individual<Integer> individual) {
-			NQueensBoard board = getBoardForIndividual(individual);
-			return board.getSize() - board.getNumberOfAttackedQueens();
+			List<Integer> queens = individual.getRepresentation();
+			int attackedQueens = 0;
+			for (int queen = 0; queen < queens.size(); queen++) {
+				if (isQueenAttacked(queens, queen)) attackedQueens++;
+			}
+			return queens.size() - attackedQueens;
+		}
+		
+		public boolean isQueenAttacked(List<Integer> queens, int queenX) {
+			for (int otherQueenX = 0; otherQueenX < queens.size(); otherQueenX++) {
+				if (otherQueenX != queenX && 
+						(queenX + queens.get(queenX) == otherQueenX + queens.get(otherQueenX) ||
+						queenX - queens.get(queenX) == otherQueenX - queens.get(otherQueenX)))
+					return true;
+			}
+			return false;
 		}
 	}
 
